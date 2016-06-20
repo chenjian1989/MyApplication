@@ -29,6 +29,7 @@ public class CommonLogin {
 
     /**
      * 获取验证码接口
+     *
      * @param phone
      * @return
      */
@@ -62,6 +63,7 @@ public class CommonLogin {
 
     /**
      * 登录接口
+     *
      * @param phone
      * @param code
      * @return
@@ -103,6 +105,7 @@ public class CommonLogin {
 
     /**
      * 更新用户姓名接口
+     *
      * @param name
      * @param id
      * @return
@@ -211,6 +214,7 @@ public class CommonLogin {
 
     /**
      * 显示加载中对话框
+     *
      * @param context
      */
     public static void showLoadingDialog(Context context, String message, boolean isCancelable) {

@@ -13,6 +13,9 @@ import com.dudu.mobile.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * 做测试用的
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
