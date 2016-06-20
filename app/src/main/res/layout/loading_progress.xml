@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="@color/transparent"
+              android:gravity="center"
+              android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:background="@drawable/loading_progress"
+        >
+
+        <com.dudu.mobile.ui.GifView
+            android:id="@+id/gif"
+            android:layout_width="@dimen/bigloading_w_h"
+            android:layout_height="@dimen/bigloading_w_h"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:enabled="false" >
+        </com.dudu.mobile.ui.GifView>
+
+        <TextView
+            android:id="@+id/msg"
+            style="@style/textcolor_wihte"
+            android:textColor="#999999"
+            android:layout_below="@id/gif"
+            android:layout_centerHorizontal="true"
+            android:text="正在更新"
+            android:singleLine="true"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+</LinearLayout>
