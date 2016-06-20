@@ -28,6 +28,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         }, SPLASH_DISPLAY_LENGHT);
     }
