@@ -139,6 +139,7 @@ public class WebActivity extends Activity {
 
     /**
      * 分享到微信
+     *
      * @param flag
      * @param url
      * @param title

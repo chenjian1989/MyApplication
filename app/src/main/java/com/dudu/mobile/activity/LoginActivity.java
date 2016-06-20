@@ -201,7 +201,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.btn_verification_code:
                 // 获取验证码
-                if(isQueryVer){
+                if (isQueryVer) {
                     getVerificationCode();
                 }
                 break;

@@ -50,7 +50,7 @@ public class UpdateNameActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             final UpdateNameActivity activity = mActivityReference.get();
             if (activity != null) {
-                switch (msg.what){
+                switch (msg.what) {
                     case MSG_ISNULL:
                         Toast.makeText(activity, MSG_NAMENOTNULL, Toast.LENGTH_SHORT).show();
                         break;
@@ -71,7 +71,7 @@ public class UpdateNameActivity extends AppCompatActivity {
         initView();
     }
 
-    private void initView(){
+    private void initView() {
 
         mEdit_name = (EditText) findViewById(R.id.edit_name);
         Button button_done = (Button) findViewById(R.id.btn_done);
@@ -84,7 +84,7 @@ public class UpdateNameActivity extends AppCompatActivity {
         });
     }
 
-    private void saveUserInfo(){
+    private void saveUserInfo() {
         mDialog = new LoadingBlack(UpdateNameActivity.this, R.style.DialogBlack, "正在保存中...");
         mDialog.show();
 
@@ -92,13 +92,13 @@ public class UpdateNameActivity extends AppCompatActivity {
             @Override
             public void run() {
                 String name = mEdit_name.getText().toString();
-                if(TextUtils.isEmpty(name)){
+                if (TextUtils.isEmpty(name)) {
                     myHandler.sendEmptyMessage(MSG_ISNULL);
                     mDialog.dismiss();
                 } else {
                     CommonResult<String> res = CommonLogin.UpdateName(name, mLoginEntity.getUserId());
                     mDialog.dismiss();
-                    if(res.isResult()){
+                    if (res.isResult()) {
                         // 保存用户信息,然后进入主页面 WebActivity
                         mLoginEntity.setUserName(name);
                         CommonLogin.saveLoginInfo(UpdateNameActivity.this, mLoginEntity);

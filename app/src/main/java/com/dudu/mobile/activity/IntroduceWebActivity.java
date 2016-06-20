@@ -39,14 +39,14 @@ public class IntroduceWebActivity extends Activity {
 
         mWebView.setWebViewClient(new BridgeWebViewClient());
 
-        if(type == PARAM_AGREEMENT){
+        if (type == PARAM_AGREEMENT) {
             mWebView.loadUrl("http://fanyi.baidu.com");
-        } else if(type == PARAM_ENTERPRISE){
+        } else if (type == PARAM_ENTERPRISE) {
             mWebView.loadUrl("http://www.baidu.com");
         }
     }
 
-    private void initView(){
+    private void initView() {
         mWebView = (WebView) findViewById(R.id.webview_web);
     }
 }
