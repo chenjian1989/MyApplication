@@ -307,6 +307,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private void Login() {
 
+//        Intent intent = new Intent(LoginActivity.this, WebActivity.class);
+//        startActivity(intent);
+
         final String phone = mEdit_phone.getText().toString().trim();
         final String ver_code = mEdit_verification_code.getText().toString().trim();
 

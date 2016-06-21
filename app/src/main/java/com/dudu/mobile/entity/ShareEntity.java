@@ -5,7 +5,7 @@ package com.dudu.mobile.entity;
  */
 public class ShareEntity {
 
-    //flag 0是朋友圈，1是好友
+    //flag 1是朋友圈，0是好友
     private int flag;
 
     // 显示的url

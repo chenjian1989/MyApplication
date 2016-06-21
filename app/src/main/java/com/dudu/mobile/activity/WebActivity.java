@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -38,7 +39,7 @@ public class WebActivity extends Activity {
     /**
      * 微信appid
      */
-    private String APP_ID = "wx807e7e8b4aba90f4";
+    private String APP_ID = "wx20cf41c633347c95";
 
     private WebView mWebView;
 
@@ -65,7 +66,6 @@ public class WebActivity extends Activity {
 
         //载入js
 //        mWebView.loadUrl("file:///android_asset/web.html");
-//        mWebView.loadUrl("http://www.baidu.com");
 
     }
 
@@ -84,6 +84,7 @@ public class WebActivity extends Activity {
     public void share(String json) {
         // 微信分享
         try {
+//            String json = "{\"flag\":0,\"url\":\"www.baidu.com\",\"title\":\"嘟嘟分享\",\"description\":\"这是一条分享信息\"}";
             Gson gson = new Gson();
             ShareEntity se = gson.fromJson(json, ShareEntity.class);
             shareToWeixin(se.getFlag(), se.getUrl(), se.getTitle(), se.getDescription());
@@ -164,7 +165,7 @@ public class WebActivity extends Activity {
         msg.description = description;
 
         Bitmap thumb = BitmapFactory.decodeResource(getResources(),
-                R.drawable.ic_launcher);
+                R.drawable.icon);
         msg.setThumbImage(thumb);
 
         SendMessageToWX.Req req = new SendMessageToWX.Req();
