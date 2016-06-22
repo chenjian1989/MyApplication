@@ -19,13 +19,16 @@ import java.io.InputStream;
  * 如果要显示的gif太大，会出现OOM的问题。
  *
  * @author liao
- *
  */
 public class GifView extends View implements GifAction {
 
-    /** gif解码器 */
+    /**
+     * gif解码器
+     */
     private GifDecoder gifDecoder = null;
-    /** 当前要画的帧的图 */
+    /**
+     * 当前要画的帧的图
+     */
     private Bitmap currentImage = null;
 
     private boolean isRun = true;
@@ -48,7 +51,6 @@ public class GifView extends View implements GifAction {
      * 如果图片较大，那么解码过程会比较长，这个解码过程中，gif如何显示
      *
      * @author liao
-     *
      */
     public enum GifImageType {
         /**
@@ -88,8 +90,7 @@ public class GifView extends View implements GifAction {
     /**
      * 设置图片，并开始解码
      *
-     * @param gif
-     *            要设置的图片
+     * @param gif 要设置的图片
      */
     private void setGifDecoderImage(byte[] gif) {
         redrawHandler = mRedrawHandler;
@@ -105,8 +106,7 @@ public class GifView extends View implements GifAction {
     /**
      * 设置图片，开始解码
      *
-     * @param is
-     *            要设置的图片
+     * @param is 要设置的图片
      */
     private void setGifDecoderImage(InputStream is) {
         redrawHandler = mRedrawHandler;
@@ -122,8 +122,7 @@ public class GifView extends View implements GifAction {
     /**
      * 以字节数据形式设置gif图片
      *
-     * @param gif
-     *            图片
+     * @param gif 图片
      */
     public void setGifImage(byte[] gif) {
         setGifDecoderImage(gif);
@@ -132,8 +131,7 @@ public class GifView extends View implements GifAction {
     /**
      * 以字节流形式设置gif图片
      *
-     * @param is
-     *            图片
+     * @param is 图片
      */
     public void setGifImage(InputStream is) {
         setGifDecoderImage(is);
@@ -142,8 +140,7 @@ public class GifView extends View implements GifAction {
     /**
      * 以资源形式设置gif图片
      *
-     * @param resId
-     *            gif图片的资源ID
+     * @param resId gif图片的资源ID
      */
     public void setGifImage(int resId) {
         Resources r = this.getResources();
@@ -165,13 +162,13 @@ public class GifView extends View implements GifAction {
         canvas.save();
         canvas.translate(getPaddingLeft(), getPaddingTop());
         if (showWidth == -1) {
-            if(drawInCenter){
-                int x = (getWidth()-currentImage.getWidth())/2;
-                x = x>0?x:0;
-                int y = (getHeight()-currentImage.getHeight())/2;
-                y = y>0?y:0;
+            if (drawInCenter) {
+                int x = (getWidth() - currentImage.getWidth()) / 2;
+                x = x > 0 ? x : 0;
+                int y = (getHeight() - currentImage.getHeight()) / 2;
+                y = y > 0 ? y : 0;
                 canvas.drawBitmap(currentImage, x, y, null);
-            }else{
+            } else {
                 canvas.drawBitmap(currentImage, 0, 0, null);
             }
         } else {
@@ -241,8 +238,7 @@ public class GifView extends View implements GifAction {
      * 设置gif在解码过程中的显示方式<br>
      * <strong>本方法只能在setGifImage方法之前设置，否则设置无效</strong>
      *
-     * @param type
-     *            显示方式
+     * @param type 显示方式
      */
     public void setGifImageType(GifImageType type) {
         if (gifDecoder == null)
@@ -253,10 +249,8 @@ public class GifView extends View implements GifAction {
      * 设置要显示的图片的大小<br>
      * 当设置了图片大小 之后，会按照设置的大小来显示gif（按设置后的大小来进行拉伸或压缩）
      *
-     * @param width
-     *            要显示的图片宽
-     * @param height
-     *            要显示的图片高
+     * @param width  要显示的图片宽
+     * @param height 要显示的图片高
      */
     public void setShowDimension(int width, int height) {
         if (width > 0 && height > 0) {
@@ -320,13 +314,12 @@ public class GifView extends View implements GifAction {
 
     private void reDraw() {
         if (redrawHandler != null) {
-            try{
+            try {
                 Message msg = redrawHandler.obtainMessage();
-                if(msg != null && redrawHandler != null){
+                if (msg != null && redrawHandler != null) {
                     redrawHandler.sendMessage(msg);
                 }
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 ;
             }
         }
@@ -355,7 +348,6 @@ public class GifView extends View implements GifAction {
      * 动画线程
      *
      * @author liao
-     *
      */
     private class DrawThread extends Thread {
 
@@ -367,19 +359,18 @@ public class GifView extends View implements GifAction {
             while (isRun) {
                 if (pause == false) {
                     // if(gifDecoder.parseOk()){
-                    if(gifDecoder!=null){
+                    if (gifDecoder != null) {
                         GifFrame frame = gifDecoder.next();
-                        if(null != frame){
+                        if (null != frame) {
                             currentImage = frame.image;
                             long sp = frame.delay;
                             if (redrawHandler != null) {
-                                try{
+                                try {
                                     Message msg = redrawHandler.obtainMessage();
-                                    if(msg != null && redrawHandler != null){
+                                    if (msg != null && redrawHandler != null) {
                                         redrawHandler.sendMessage(msg);
                                     }
-                                }
-                                catch(Exception e){
+                                } catch (Exception e) {
                                     ;
                                 }
                                 SystemClock.sleep(sp);

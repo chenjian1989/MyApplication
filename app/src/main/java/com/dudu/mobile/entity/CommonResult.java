@@ -5,13 +5,19 @@ import java.io.Serializable;
 public class CommonResult<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** 错误描述 */
+    /**
+     * 错误描述
+     */
     private String description;
 
-    /** 返回的实体 */
+    /**
+     * 返回的实体
+     */
     private T entity;
 
-    /** 返回结果 */
+    /**
+     * 返回结果
+     */
     private boolean result;
 
     public T getEntity() {
