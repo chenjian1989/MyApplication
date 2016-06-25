@@ -1,5 +1,12 @@
 package com.dudu.mobile.datahandler;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
+import com.dudu.mobile.R;
+import com.dudu.mobile.activity.ContextUtil;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -108,6 +115,13 @@ public class HttpClientUtil {
     public static ResultWebapi PostExecute(String url, String paramJson) {
 
         ResultWebapi resultWebapi = new ResultWebapi();
+
+        if (!isNetworkConnected(ContextUtil.getInstance())) {
+            resultWebapi.setRetCode(-1);
+            resultWebapi.setDescription("网络不给力,请检查网络设置!");
+            return resultWebapi;
+        }
+
         try {
             // 设置URL
             HttpPost httpost = new HttpPost(url);
@@ -143,6 +157,14 @@ public class HttpClientUtil {
     public static ResultWebapi GetExecute(String url) {
 
         ResultWebapi resultWebapi = new ResultWebapi();
+
+        if (!isNetworkConnected(ContextUtil.getInstance())) {
+            resultWebapi.setRetCode(-1);
+            resultWebapi.setDescription(ContextUtil.getInstance().getResources()
+                    .getString(R.string.network_error));
+            return resultWebapi;
+        }
+
         try {
             // 设置URL
             HttpGet httpget = new HttpGet(url);
@@ -161,7 +183,7 @@ public class HttpClientUtil {
                 if (code != 0 && jsonObject.has("desc")) {
                     resultWebapi.setDescription(jsonObject.getString("desc"));
                 }
-                if(jsonObject.has("returnobject")){
+                if (jsonObject.has("returnobject")) {
                     resultWebapi.setRetObject(jsonObject.getString("returnobject"));
                 }
             } else {
@@ -174,5 +196,19 @@ public class HttpClientUtil {
         }
 
         return resultWebapi;
+    }
+
+    // 网络状态
+    public static boolean isNetworkConnected(Context context) {
+        if (context != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mNetworkInfo = mConnectivityManager
+                    .getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable();
+            }
+        }
+        return false;
     }
 }

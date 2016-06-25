@@ -18,9 +18,12 @@ import android.widget.Toast;
 
 import com.dudu.mobile.R;
 import com.dudu.mobile.datahandler.CommonLogin;
+import com.dudu.mobile.datahandler.ContactsUtil;
 import com.dudu.mobile.entity.CommonResult;
+import com.dudu.mobile.entity.ContactsEntity;
 import com.dudu.mobile.entity.LoginEntity;
 import com.dudu.mobile.ui.LoadingBlack;
+import com.google.gson.Gson;
 
 import java.lang.ref.WeakReference;
 import java.util.regex.Matcher;
@@ -87,7 +90,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private static final int MSG_REGISTER_VERIFICATION_SEND = 8;
 
-    private int mVerificationtime = 60;
+    private final int mVerificationtime = 60;
 
     private int mVerificationCountTime = 0;
 
@@ -307,9 +310,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private void Login() {
 
-//        Intent intent = new Intent(LoginActivity.this, WebActivity.class);
-//        startActivity(intent);
-
         final String phone = mEdit_phone.getText().toString().trim();
         final String ver_code = mEdit_verification_code.getText().toString().trim();
 
@@ -381,7 +381,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void verificationcount() {
         isQueryVer = false;
         mVerificationCountTime = 0;
-        mVerificationtime = 60;
         mBtn_verification_code.setText(mVerificationtime + MSG_AGAIN);
         mBtn_verification_code.setBackgroundResource(R.drawable.login_ver);
         new Thread(new Runnable() {
