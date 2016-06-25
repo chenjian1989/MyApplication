@@ -320,7 +320,7 @@ public class GifView extends View implements GifAction {
                     redrawHandler.sendMessage(msg);
                 }
             } catch (Exception e) {
-                ;
+                e.getMessage();
             }
         }
     }
@@ -371,7 +371,7 @@ public class GifView extends View implements GifAction {
                                         redrawHandler.sendMessage(msg);
                                     }
                                 } catch (Exception e) {
-                                    ;
+                                    e.getMessage();
                                 }
                                 SystemClock.sleep(sp);
                             } else {

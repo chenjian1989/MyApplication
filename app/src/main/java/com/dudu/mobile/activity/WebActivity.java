@@ -7,7 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -26,6 +27,10 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+
 /**
  * web展示页
  */
@@ -42,6 +47,8 @@ public class WebActivity extends Activity {
     private String APP_ID = "wx20cf41c633347c95";
 
     private WebView mWebView;
+
+    private Handler mHandler = new Handler();
 
     @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
     @Override
@@ -86,11 +93,41 @@ public class WebActivity extends Activity {
         try {
 //            String json = "{\"flag\":0,\"url\":\"www.baidu.com\",\"title\":\"嘟嘟分享\",\"description\":\"这是一条分享信息\"}";
             Gson gson = new Gson();
-            ShareEntity se = gson.fromJson(json, ShareEntity.class);
-            shareToWeixin(se.getFlag(), se.getUrl(), se.getTitle(), se.getDescription());
+            ShareEntity shareEntity = gson.fromJson(json, ShareEntity.class);
+            if (TextUtils.isEmpty(shareEntity.getImageUrl())) {
+                shareToWeixin(shareEntity.getFlag(), shareEntity.getUrl(), shareEntity.getTitle()
+                        , shareEntity.getDescription(), null);
+            } else {
+                getImageUrl(shareEntity);
+            }
         } catch (Exception e) {
             e.getMessage();
         }
+    }
+
+    private void getImageUrl(final ShareEntity shareEntity) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //建立网络连接
+                    URL imageURl = new URL(shareEntity.getImageUrl());
+                    URLConnection con = imageURl.openConnection();
+                    con.connect();
+                    InputStream in = con.getInputStream();
+                    final Bitmap bitmap = BitmapFactory.decodeStream(in);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            shareToWeixin(shareEntity.getFlag(), shareEntity.getUrl(), shareEntity.getTitle()
+                                    , shareEntity.getDescription(), bitmap);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     @JavascriptInterface
@@ -146,7 +183,7 @@ public class WebActivity extends Activity {
      * @param title
      * @param description
      */
-    private void shareToWeixin(int flag, String url, String title, String description) {
+    private void shareToWeixin(int flag, String url, String title, String description, Bitmap thumb) {
         if (wxApi == null) {
             wxApi = WXAPIFactory.createWXAPI(this, APP_ID);
             wxApi.registerApp(APP_ID);
@@ -164,8 +201,10 @@ public class WebActivity extends Activity {
         msg.title = title;
         msg.description = description;
 
-        Bitmap thumb = BitmapFactory.decodeResource(getResources(),
-                R.drawable.icon);
+        if (thumb == null) {
+            thumb = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.icon);
+        }
         msg.setThumbImage(thumb);
 
         SendMessageToWX.Req req = new SendMessageToWX.Req();

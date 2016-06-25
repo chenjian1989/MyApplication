@@ -17,6 +17,19 @@ public class ShareEntity {
     // 描述
     private String description;
 
+    /**
+     * 用户头像图片
+     */
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public int getFlag() {
         return flag;
     }
