@@ -15,6 +15,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.dudu.mobile.R;
@@ -58,7 +59,7 @@ public class WebActivity extends Activity {
 
     private WebView mWebView;
 
-    private ImageView mImage_error;
+    private LinearLayout mLLy_error;
 
     private MyHandler myHandler;
 
@@ -84,7 +85,7 @@ public class WebActivity extends Activity {
                         Toast.makeText(activity, "保存联系人成功!", Toast.LENGTH_SHORT).show();
                         break;
                     case MSG_WEBVIEW_ERROR:
-                        activity.mImage_error.setVisibility(View.VISIBLE);
+                        activity.mLLy_error.setVisibility(View.VISIBLE);
                         activity.mWebView.setVisibility(View.GONE);
                         if (!HttpClientUtil.isNetworkConnected(ContextUtil.getInstance())) {
                             Toast.makeText(activity
@@ -93,7 +94,7 @@ public class WebActivity extends Activity {
                         }
                         break;
                     case MSG_WEBVIEW_DONE:
-                        activity.mImage_error.setVisibility(View.GONE);
+                        activity.mLLy_error.setVisibility(View.GONE);
                         activity.mWebView.setVisibility(View.VISIBLE);
                         break;
                 }
@@ -156,13 +157,13 @@ public class WebActivity extends Activity {
 
     private void initView() {
         mWebView = (WebView) findViewById(R.id.webview_web);
-        mImage_error = (ImageView) findViewById(R.id.iamge_error);
-        mImage_error.setOnClickListener(new View.OnClickListener() {
+        mLLy_error = (LinearLayout) findViewById(R.id.lly_error);
+        mLLy_error.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 刷新WebView
                 mWebView.reload();
-                mImage_error.setVisibility(View.GONE);
+                mLLy_error.setVisibility(View.GONE);
                 mWebView.setVisibility(View.VISIBLE);
 
             }

@@ -40,9 +40,9 @@ public class IntroduceWebActivity extends Activity {
         mWebView.setWebViewClient(new BridgeWebViewClient());
 
         if (type == PARAM_AGREEMENT) {
-            mWebView.loadUrl("http://fanyi.baidu.com");
+            mWebView.loadUrl("http://android.dudump.net/about/terms.html");
         } else if (type == PARAM_ENTERPRISE) {
-            mWebView.loadUrl("http://www.baidu.com");
+            mWebView.loadUrl("http://android.dudump.net/about/help/help01.html");
         }
     }
 
