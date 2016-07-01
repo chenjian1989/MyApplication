@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.dudu.mobile"
-        minSdkVersion 10
-        targetSdkVersion 22
+        minSdkVersion 14
+        targetSdkVersion 20
         versionCode 1
         versionName "1.0"
     }

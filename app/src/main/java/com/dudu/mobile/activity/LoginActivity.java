@@ -328,10 +328,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        if (ver_code.length() != 6) {
-            myHandler.sendEmptyMessage(MSG_NUMBERCOUNT);
-            return;
-        }
+//        if (ver_code.length() != 6) {
+//            myHandler.sendEmptyMessage(MSG_NUMBERCOUNT);
+//            return;
+//        }
 
         mDialog = new LoadingBlack(LoginActivity.this, R.style.DialogBlack, "正在登录中...");
         mDialog.show();

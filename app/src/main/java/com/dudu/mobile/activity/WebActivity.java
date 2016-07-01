@@ -6,15 +6,19 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -32,9 +36,7 @@ import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
+import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
@@ -62,6 +64,12 @@ public class WebActivity extends Activity {
     private LinearLayout mLLy_error;
 
     private MyHandler myHandler;
+
+    private ValueCallback<Uri> mUploadMessage;
+
+    private String mCameraFilePath = null;
+
+    private static final int FILECHOOSER_RESULTCODE = 10;
 
     public static final int MSG_TOAST = 1;
 
@@ -113,6 +121,7 @@ public class WebActivity extends Activity {
         mWebView.getSettings().setDefaultTextEncodingName("utf-8");
         //支持js
         mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setAllowFileAccess(true);
         //设置背景颜色 透明
         mWebView.setBackgroundColor(Color.argb(0, 0, 0, 0));
         //设置本地调用对象及其接口
@@ -128,7 +137,18 @@ public class WebActivity extends Activity {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                view.loadUrl(url);
+                if (url.startsWith("tel:")) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(url));
+                    startActivity(intent);
+                } else {
+                    view.loadUrl(url);
+                }
+
+//                if(url.startsWith("http:") || url.startsWith("https:")) {
+//                    view.loadUrl(url);
+//                }
+
                 return true;
             }
 
@@ -145,14 +165,72 @@ public class WebActivity extends Activity {
                 myHandler.sendEmptyMessage(MSG_WEBVIEW_ERROR);
             }
         });
+        mWebView.setWebChromeClient(new MyWebChromeClient(new WebChromeClient()) {
+
+            @Override
+            public void openFileChooser(ValueCallback<Uri> uploadFile) {
+                mUploadMessage = uploadFile;
+
+                startActivityForResult(Intent.createChooser(createDefaultOpenableIntent(), null)
+                        , FILECHOOSER_RESULTCODE);
+
+            }
+
+            @Override
+            public void openFileChooser(ValueCallback<Uri> uploadFile, String acceptType) {
+                openFileChooser(uploadFile);
+            }
+
+            @Override
+            public void openFileChooser(ValueCallback<Uri> uploadFile, String acceptType,
+                                        String capture) {
+                openFileChooser(uploadFile);
+            }
+        });
 
         String indexUrl = CommonLogin.getIndexUrl(WebActivity.this);
 
         mWebView.loadUrl(indexUrl);
 
         //载入js
-//        mWebView.loadUrl("file:///android_asset/web.html");
+//        mWebView.loadUrl("file:///android_asset/1.html");
 
+    }
+
+    private Intent createDefaultOpenableIntent() {
+        // Create and return a chooser with the default OPENABLE
+        // actions including the camera, camcorder and sound
+        // recorder where available.
+        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);
+        i.setType("image/*");
+
+        Intent chooser = createChooserIntent(createCameraIntent());
+        chooser.putExtra(Intent.EXTRA_INTENT, i);
+        return chooser;
+    }
+
+    private Intent createChooserIntent(Intent... intents) {
+        Intent chooser = new Intent(Intent.ACTION_CHOOSER);
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents);
+//        chooser.putExtra(Intent.EXTRA_TITLE, "File Chooser");
+        return chooser;
+    }
+
+    private Intent createCameraIntent() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        File externalDataDir = Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        File cameraDataDir = new File(externalDataDir.getAbsolutePath()
+                + File.separator + "browser-photo");
+        cameraDataDir.mkdirs();
+        mCameraFilePath = cameraDataDir.getAbsolutePath() + File.separator
+                + System.currentTimeMillis() + ".jpg";
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                Uri.fromFile(new File(mCameraFilePath)));
+
+        return cameraIntent;
     }
 
     private void initView() {
@@ -310,6 +388,23 @@ public class WebActivity extends Activity {
                     }
                 });
             }
+        } else if (requestCode == FILECHOOSER_RESULTCODE) {
+            if (null == mUploadMessage)
+                return;
+            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+
+            if (result == null && data == null
+                    && resultCode == Activity.RESULT_OK) {
+
+                File cameraFile = new File(mCameraFilePath);
+
+                if (cameraFile.exists()) {
+                    result = Uri.fromFile(cameraFile);
+                }
+            }
+
+            mUploadMessage.onReceiveValue(result);
+            mUploadMessage = null;
         }
     }
 
