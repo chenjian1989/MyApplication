@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.dudu.mobile.R;
+import com.karics.library.zxing.android.CaptureActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +32,10 @@ public class MainActivity extends AppCompatActivity {
         btn_open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//                startActivity(intent);
+
+                Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
                 startActivity(intent);
             }
         });
