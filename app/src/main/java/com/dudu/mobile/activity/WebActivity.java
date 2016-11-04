@@ -329,6 +329,8 @@ public class WebActivity extends Activity {
     public void quit() {
         // 退出
         CommonLogin.LogOut(WebActivity.this);
+        Intent intent = new Intent(WebActivity.this, LoginActivity.class);
+        startActivity(intent);
         finish();
     }
 
@@ -392,17 +394,13 @@ public class WebActivity extends Activity {
             if (null == mUploadMessage)
                 return;
             Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
-
             if (result == null && data == null
                     && resultCode == Activity.RESULT_OK) {
-
                 File cameraFile = new File(mCameraFilePath);
-
                 if (cameraFile.exists()) {
                     result = Uri.fromFile(cameraFile);
                 }
             }
-
             mUploadMessage.onReceiveValue(result);
             mUploadMessage = null;
         }

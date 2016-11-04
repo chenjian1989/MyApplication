@@ -175,6 +175,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
     private void initView() {
 
         mBtn_verification_code = (Button) findViewById(R.id.btn_verification_code);
@@ -342,6 +347,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (mIsLogin) {
                     mIsLogin = false;
                     CommonResult<LoginEntity> res = CommonLogin.Login(phone, ver_code);
+                    mDialog.dismiss();
                     if (res.isResult()) {
                         // 登陆成功!
                         LoginEntity loginEntity = res.getEntity();
@@ -360,6 +366,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 Intent intent = new Intent(LoginActivity.this, WebActivity.class);
                                 startActivity(intent);
                             }
+                            finish();
                         }
                     } else {
                         Message msg = new Message();
@@ -368,9 +375,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         myHandler.sendMessage(msg);
                     }
                     mIsLogin = true;
+                } else {
+                    mDialog.dismiss();
                 }
-
-                mDialog.dismiss();
             }
         }).start();
     }
